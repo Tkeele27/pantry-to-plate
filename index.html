@@ -1,0 +1,666 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pantry to Plate — Smart Meal Planner</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap');
+
+:root {
+  --forest:#173d32;
+  --green:#2d674d;
+  --sage:#e8efe6;
+  --cream:#f8f8f4;
+  --orange:#d8895c;
+  --ink:#26372e;
+  --muted:#7b877e;
+  --line:#e7e9e2;
+  --white:#fff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #a7c9ad;outline-offset:3px}
+.topbar{height:76px;padding:0 6%;display:flex;align-items:center;justify-content:space-between;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:-.7px;color:var(--forest)}
+.brand-mark{width:36px;height:36px;border-radius:11px;background:var(--forest);color:white;display:grid;place-items:center;font-size:20px}
+.brand span{color:var(--orange)}
+.top-right{display:flex;align-items:center;gap:18px;color:var(--muted);font-size:12px}
+.status-dot{width:8px;height:8px;background:#70a77d;border-radius:50%;display:inline-block;margin-right:6px}
+main{max-width:1240px;margin:auto;padding:40px 28px 70px}
+.welcome{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:30px}
+.eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--green);font-weight:800;margin-bottom:12px}
+h1,h2,.serif{font-family:'Playfair Display',serif;color:var(--forest)}
+h1{font-size:clamp(34px,4vw,47px);font-weight:600;line-height:1.12;letter-spacing:-1px}
+.welcome p{font-size:13px;color:var(--muted);margin-top:12px;line-height:1.8}
+.date-note{font-size:12px;color:var(--muted);white-space:nowrap;padding-bottom:6px}
+.hero{display:grid;grid-template-columns:1.03fr .97fr;gap:25px;margin-bottom:48px}
+.upload-panel{background:var(--forest);color:white;padding:30px;border-radius:17px;min-width:0}
+.upload-panel h2{color:white;font-size:27px;line-height:1.2;margin-bottom:10px}
+.upload-panel>p{color:#c4d5ca;font-size:12px;line-height:1.8;margin-bottom:23px}
+.dropzone{min-height:235px;border:1px dashed #779987;background:#214b3d;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;overflow:hidden;transition:.2s}
+.dropzone:hover{background:#285742;border-color:white}
+.upload-icon{width:54px;height:54px;border-radius:16px;background:#ffffff17;display:grid;place-items:center;font-size:25px;margin-bottom:15px}
+.dropzone strong{font-size:13px}
+.dropzone small{font-size:11px;color:#c4d5ca;margin-top:8px}
+#photoPreview{display:none;max-width:100%;max-height:300px;object-fit:contain;border-radius:8px}
+#photoInput{display:none}
+.photo-actions{display:flex;gap:9px;margin-top:13px;flex-wrap:wrap}
+.light-btn,.outline-btn{padding:11px 15px;border-radius:8px;font-size:12px;font-weight:700;border:1px solid #ffffff40;background:#ffffff12;color:white}
+.light-btn{background:white;color:var(--forest);border-color:white}
+.light-btn:hover{background:#edf4ec}
+.outline-btn:hover{background:#ffffff20}
+.upload-foot{font-size:10px;color:#b7cbbd;margin-top:16px;line-height:1.7}
+.ingredient-panel{background:white;border:1px solid var(--line);border-radius:17px;padding:27px;min-width:0}
+.panel-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:7px}
+.panel-title h2{font-size:23px}
+.number-pill{font-size:10px;font-weight:800;background:var(--sage);color:var(--green);padding:7px 10px;border-radius:30px;white-space:nowrap}
+.subtext{font-size:12px;color:var(--muted);line-height:1.7}
+.ingredient-list{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0;min-height:70px;align-content:flex-start}
+.chip{display:inline-flex;align-items:center;gap:7px;background:#edf3eb;color:#315a43;padding:9px 11px;border-radius:7px;font-size:11px;font-weight:700}
+.chip button{background:none;border:0;color:#64806a;font-size:16px;line-height:1}
+.empty-ingredients{font-size:12px;color:var(--muted);padding:12px 0}
+.add-row{display:flex;gap:8px}
+.add-row input,.settings input,.settings select{width:100%;min-width:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:white;color:var(--ink);font-size:12px}
+.add-row button{border:0;border-radius:8px;background:var(--forest);color:white;padding:0 17px;font-size:12px;font-weight:700}
+.add-row button:hover,.primary:hover{background:var(--green)}
+.settings{margin-top:21px;padding-top:19px;border-top:1px solid var(--line)}
+.settings label{font-size:11px;font-weight:700;display:block;margin-bottom:8px;color:var(--ink)}
+.settings select{margin-bottom:15px}
+.primary{border:0;border-radius:8px;background:var(--forest);color:white;padding:14px 18px;font-weight:700;font-size:12px;transition:.2s}
+.primary:disabled{opacity:.6;cursor:wait}
+.full{width:100%}
+.secondary{border:1px solid var(--line);background:white;color:var(--forest);border-radius:8px;padding:11px 15px;font-weight:700;font-size:12px}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:15px;margin-bottom:22px}
+.section-head h2{font-size:32px}
+.section-head p{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7}
+.recipe-count{font-size:11px;color:var(--muted);white-space:nowrap}
+#message{display:none;padding:14px 16px;border-radius:9px;background:#fff3e9;color:#82542f;font-size:12px;line-height:1.7;margin-bottom:20px}
+#results{scroll-margin-top:95px}
+.recipe-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:19px}
+.recipe-card{background:white;border:1px solid var(--line);border-radius:13px;overflow:hidden;min-width:0;transition:transform .2s,box-shadow .2s}
+.recipe-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px #173d3210}
+.recipe-image{height:185px;background:#e9eee5 center/cover;position:relative;display:flex;align-items:center;justify-content:center}
+.recipe-image .food-emoji{font-size:52px}
+.match-pill{position:absolute;top:12px;left:12px;padding:7px 10px;background:white;border-radius:6px;color:var(--green);font-size:10px;font-weight:800}
+.recipe-body{padding:19px}
+.recipe-body h3{font-family:'Playfair Display',serif;font-size:21px;color:var(--forest);margin-bottom:9px}
+.recipe-body>p{font-size:12px;line-height:1.8;color:var(--muted);min-height:43px}
+.recipe-meta{display:flex;gap:13px;flex-wrap:wrap;margin:14px 0;color:#68776b;font-size:10px}
+.match-info{font-size:11px;color:var(--green);background:#f1f5ef;border-radius:7px;padding:10px;line-height:1.7;margin-bottom:13px}
+.recipe-button{width:100%;border:0;background:var(--sage);color:var(--forest);border-radius:7px;padding:12px;font-size:11px;font-weight:800}
+.recipe-button:hover{background:#dbe8d8}
+.details{display:none;border-top:1px solid var(--line);margin-top:14px;padding-top:14px;font-size:12px;line-height:1.8;color:#667269}
+.details h4{color:var(--forest);margin:10px 0 5px;font-size:12px}
+.details ul,.details ol{padding-left:18px}
+.details li{margin-bottom:5px}
+.empty-results{grid-column:1/-1;background:white;border:1px solid var(--line);border-radius:12px;padding:38px;text-align:center;color:var(--muted);font-size:13px;line-height:1.9}
+.empty-results strong{display:block;font-family:'Playfair Display',serif;font-size:23px;color:var(--forest);margin-bottom:7px}
+.how-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:65px;padding:28px;background:#edf1e9;border-radius:14px}
+.how-step{display:flex;gap:14px;align-items:flex-start}
+.step-icon{width:39px;height:39px;flex-shrink:0;background:white;border-radius:11px;display:grid;place-items:center;font-size:18px}
+.how-step strong{font-size:12px;color:var(--forest)}
+.how-step p{font-size:11px;color:var(--muted);line-height:1.7;margin-top:6px}
+footer{background:var(--forest);color:#c6d6cb;padding:28px 6%;display:flex;justify-content:space-between;gap:20px;align-items:center;font-size:11px}
+footer .brand{color:white}
+footer p{line-height:1.8}
+footer a{color:white}
+@media(max-width:900px){
+ .hero{grid-template-columns:1fr}
+ .recipe-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .welcome{align-items:flex-start}
+ .how-strip{grid-template-columns:1fr}
+}
+@media(max-width:550px){
+ .topbar{height:65px;padding:0 5%}
+ .top-right{font-size:0}
+ main{padding:28px 15px 45px}
+ .welcome{display:block}
+ .date-note{margin-top:13px}
+ .upload-panel,.ingredient-panel{padding:21px}
+ .recipe-grid{grid-template-columns:1fr}
+ .recipe-image{height:205px}
+ .section-head h2{font-size:27px}
+ footer{align-items:flex-start;flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="#" style="text-decoration:none">
+    <span class="brand-mark">✳</span>
+    Pantry<span style="color:var(--orange)">to</span>Plate
+  </a>
+  <div class="top-right"><span><i class="status-dot"></i>Kitchen inspiration, simplified</span></div>
+</header>
+
+<main>
+  <section class="welcome">
+    <div>
+      <div class="eyebrow">YOUR PERSONAL MEAL STUDIO</div>
+      <h1>Make more of<br>what you have.</h1>
+      <p>Discover delicious meal ideas from the ingredients already in your kitchen.</p>
+    </div>
+    <div class="date-note">LESS WASTE. MORE GOOD FOOD.</div>
+  </section>
+
+  <section class="hero">
+    <div class="upload-panel">
+      <div class="eyebrow" style="color:#c5d9c6">STEP 01 / YOUR KITCHEN</div>
+      <h2>Take a look<br>inside your fridge.</h2>
+      <p>Upload a photo of your fridge or pantry, then review your ingredients to find meals that fit.</p>
+
+      <label class="dropzone" id="dropzone" for="photoInput">
+        <img id="photoPreview" alt="Preview of your uploaded kitchen photo">
+        <div id="uploadPrompt">
+          <div class="upload-icon">↥</div>
+          <strong>Drop your photo here or browse</strong>
+          <small>JPG, PNG, WEBP · Take a photo on mobile</small>
+        </div>
+      </label>
+      <input type="file" id="photoInput" accept="image/*" capture="environment">
+
+      <div class="photo-actions">
+        <button class="light-btn" id="scanBtn" type="button">✦ Identify ingredients</button>
+        <button class="outline-btn" id="removePhoto" type="button" style="display:none">Remove photo</button>
+      </div>
+      <p class="upload-foot" id="photoStatus">Photo preview works locally. AI identification requires a connected vision service.</p>
+    </div>
+
+    <div class="ingredient-panel">
+      <div class="eyebrow">STEP 02 / YOUR INGREDIENTS</div>
+      <div class="panel-title">
+        <h2>What's on hand?</h2>
+        <span class="number-pill" id="ingredientCount">0 items</span>
+      </div>
+      <p class="subtext">Add the foods you have. We'll match them against our recipe collection.</p>
+
+      <div class="ingredient-list" id="ingredientList">
+        <div class="empty-ingredients">Your ingredients will appear here.</div>
+      </div>
+
+      <div class="add-row">
+        <input id="ingredientInput" placeholder="e.g. eggs, spinach, rice" autocomplete="off">
+        <button id="addBtn" type="button">+ Add</button>
+      </div>
+
+      <div class="settings">
+        <label for="diet">MEAL PREFERENCE</label>
+        <select id="diet">
+          <option value="all">Everything</option>
+          <option value="vegetarian">Vegetarian</option>
+          <option value="vegan">Vegan</option>
+          <option value="high-protein">High protein</option>
+        </select>
+        <label for="maxTime">COOKING TIME</label>
+        <select id="maxTime">
+          <option value="999">Any amount of time</option>
+          <option value="15">15 minutes or less</option>
+          <option value="30">30 minutes or less</option>
+          <option value="45">45 minutes or less</option>
+        </select>
+        <button class="primary full" id="findBtn" type="button">Find my meals &nbsp; →</button>
+        <button class="secondary full" id="demoBtn" type="button" style="margin-top:9px">Try sample ingredients</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="results">
+    <div id="message" role="status"></div>
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">STEP 03 / GET INSPIRED</div>
+        <h2>Made for your kitchen.</h2>
+        <p>Recipes ranked by how well your ingredients match.</p>
+      </div>
+      <div class="recipe-count" id="recipeCount">Ready when you are</div>
+    </div>
+    <div class="recipe-grid" id="recipeGrid">
+      <div class="empty-results">
+        <strong>Your next favorite meal is waiting.</strong>
+        Add ingredients above and select “Find my meals” to get started.
+      </div>
+    </div>
+  </section>
+
+  <section class="how-strip">
+    <div class="how-step">
+      <div class="step-icon">📷</div>
+      <div><strong>1. Upload a photo</strong><p>Start with your fridge, pantry, or a picture of your groceries.</p></div>
+    </div>
+    <div class="how-step">
+      <div class="step-icon">🥬</div>
+      <div><strong>2. Confirm your foods</strong><p>Review the ingredients so your recommendations are more useful.</p></div>
+    </div>
+    <div class="how-step">
+      <div class="step-icon">🍲</div>
+      <div><strong>3. Discover recipes</strong><p>Find practical meal ideas and see what ingredients you might still need.</p></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div>
+    <div class="brand"><span class="brand-mark">✳</span> Pantry<span>to</span>Plate</div>
+    <p style="margin-top:9px">A little creativity. A lot less food waste.</p>
+  </div>
+  <p>Meal ideas made from what you have.<br>Always check food freshness and cook safely.</p>
+</footer>
+
+<script>
+"use strict";
+
+/*
+  OPTIONAL REAL AI CONNECTION:
+  Set AI_ENDPOINT to the URL of YOUR secure backend.
+  The backend must accept POST multipart/form-data with a field named
+  "photo" and return JSON such as:
+  { "ingredients": ["eggs", "milk", "spinach"] }
+
+  Keep API keys on the backend, never in this HTML file.
+*/
+const AI_ENDPOINT = "";
+
+const $ = id => document.getElementById(id);
+
+let ingredients = [];
+let selectedPhoto = null;
+let photoURL = null;
+
+const recipes = [
+ {
+  name:"Garlic Butter Pasta",time:15,emoji:"🍝",category:"vegetarian",
+  image:"https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=800&q=80",
+  ingredients:["pasta","garlic","butter","cheese"],
+  optional:["olive oil","black pepper"],
+  description:"A comforting, simple pasta with garlic and a buttery finish.",
+  steps:["Bring a pot of salted water to a boil and cook the pasta until tender.","Melt butter in a pan and gently cook minced garlic.","Add the drained pasta and a splash of pasta water.","Toss with cheese and black pepper. Serve hot."]
+ },
+ {
+  name:"Garden Veggie Omelette",time:12,emoji:"🍳",category:"vegetarian",
+  image:"https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=800&q=80",
+  ingredients:["eggs","cheese","tomatoes","spinach"],
+  optional:["onion","butter"],
+  description:"A quick, customizable breakfast filled with fresh flavors.",
+  steps:["Whisk the eggs in a bowl.","Chop the vegetables and sauté them briefly in a pan.","Pour in the eggs and cook over medium-low heat.","Add cheese, fold the omelette, and cook until the eggs are fully set."]
+ },
+ {
+  name:"Chicken Rice Bowl",time:30,emoji:"🍚",category:"high-protein",
+  image:"https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=800&q=80",
+  ingredients:["chicken","rice","broccoli","carrots"],
+  optional:["soy sauce","garlic"],
+  description:"A filling bowl with tender chicken, rice, and colorful vegetables.",
+  steps:["Cook rice according to the package instructions.","Cut chicken into small pieces and cook thoroughly in a skillet.","Cook the vegetables until tender.","Serve the chicken and vegetables over rice with your preferred seasoning."]
+ },
+ {
+  name:"Tomato Cheese Quesadilla",time:15,emoji:"🌮",category:"vegetarian",
+  image:"https://images.unsplash.com/photo-1618040996337-56904b7850b9?auto=format&fit=crop&w=800&q=80",
+  ingredients:["tortillas","cheese","tomatoes"],
+  optional:["onion","beans","corn"],
+  description:"Golden, crisp tortillas with gooey cheese and juicy tomatoes.",
+  steps:["Dice the tomatoes and any other vegetables.","Place cheese and filling over half of a tortilla.","Fold and cook in a dry skillet until golden on both sides.","Make sure the filling is hot, slice, and serve."]
+ },
+ {
+  name:"Creamy Chicken Pasta",time:30,emoji:"🍜",category:"high-protein",
+  image:"https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=800&q=80",
+  ingredients:["chicken","pasta","milk","garlic"],
+  optional:["cheese","butter"],
+  description:"Tender chicken and pasta in a quick, creamy garlic sauce.",
+  steps:["Boil pasta until tender and reserve a little cooking water.","Dice chicken and cook completely in a skillet.","Add garlic, milk, and cheese if available; simmer gently.","Toss with the pasta and loosen with a little pasta water if needed."]
+ },
+ {
+  name:"Chickpea Tomato Bowl",time:15,emoji:"🥗",category:"vegan",
+  image:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80",
+  ingredients:["chickpeas","tomatoes","spinach","rice"],
+  optional:["lemon","olive oil","cucumber"],
+  description:"A fresh, plant-based bowl with hearty chickpeas and vegetables.",
+  steps:["Rinse and drain the chickpeas.","Warm them in a skillet with a little oil and seasoning.","Add chopped tomatoes and spinach; cook until the spinach wilts.","Serve over cooked rice, or enjoy as a salad."]
+ },
+ {
+  name:"Peanut Noodle Bowl",time:20,emoji:"🥜",category:"vegan",
+  image:"https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80",
+  ingredients:["noodles","peanut butter","soy sauce","garlic"],
+  optional:["carrots","lime"],
+  description:"Savory noodles in a simple peanut sauce with a little tang.",
+  steps:["Cook noodles according to their package directions.","Mix peanut butter, soy sauce, garlic, and warm water into a smooth sauce.","Toss noodles with the sauce and add sliced vegetables if available.","Heat thoroughly and adjust the seasoning to taste."]
+ },
+ {
+  name:"Loaded Baked Potato",time:40,emoji:"🥔",category:"vegetarian",
+  image:"https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80",
+  ingredients:["potatoes","cheese","butter"],
+  optional:["beans","broccoli","yogurt"],
+  description:"A warm, satisfying potato with customizable toppings.",
+  steps:["Scrub the potato and pierce its skin with a fork.","Bake at 425°F (220°C) until soft, usually 40–60 minutes depending on size.","Split carefully and fluff the inside with a fork.","Add butter, cheese, and any toppings you have."]
+ },
+ {
+  name:"Banana Oat Pancakes",time:15,emoji:"🥞",category:"vegetarian",
+  image:"https://images.unsplash.com/photo-1528207776546-365bb710ee93?auto=format&fit=crop&w=800&q=80",
+  ingredients:["banana","oats","eggs"],
+  optional:["milk","cinnamon"],
+  description:"A simple breakfast using a few everyday ingredients.",
+  steps:["Mash a ripe banana in a bowl.","Mix with eggs and oats until combined.","Spoon small portions into a lightly greased skillet.","Cook both sides until set and cooked through."]
+ },
+ {
+  name:"Black Bean Rice Bowl",time:20,emoji:"🫘",category:"vegan",
+  image:"https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=800&q=80",
+  ingredients:["black beans","rice","corn","tomatoes"],
+  optional:["lime","avocado","onion"],
+  description:"A colorful plant-based bowl with beans, rice, and vegetables.",
+  steps:["Cook the rice if it is not already prepared.","Rinse and drain the beans.","Warm beans and corn in a pan with seasoning.","Serve over rice with chopped tomatoes and any available toppings."]
+ }
+];
+
+function normalize(value) {
+  return value.toLowerCase().trim().replace(/s$/, "");
+}
+
+function updateIngredients() {
+  const list = $("ingredientList");
+  list.replaceChildren();
+  $("ingredientCount").textContent = ingredients.length + (ingredients.length === 1 ? " item" : " items");
+
+  if (!ingredients.length) {
+    const empty = document.createElement("div");
+    empty.className = "empty-ingredients";
+    empty.textContent = "Your ingredients will appear here.";
+    list.appendChild(empty);
+    return;
+  }
+
+  ingredients.forEach((ingredient, index) => {
+    const chip = document.createElement("span");
+    chip.className = "chip";
+
+    const name = document.createElement("span");
+    name.textContent = ingredient;
+
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.textContent = "×";
+    remove.setAttribute("aria-label", "Remove " + ingredient);
+    remove.onclick = () => {
+      ingredients.splice(index, 1);
+      updateIngredients();
+    };
+
+    chip.append(name, remove);
+    list.appendChild(chip);
+  });
+}
+
+function addIngredients(text) {
+  const additions = text.split(",")
+    .map(x => x.trim().toLowerCase())
+    .filter(Boolean);
+
+  additions.forEach(item => {
+    if (item.length > 40) return;
+    if (!ingredients.some(existing => normalize(existing) === normalize(item))) {
+      ingredients.push(item);
+    }
+  });
+
+  updateIngredients();
+}
+
+$("addBtn").addEventListener("click", () => {
+  addIngredients($("ingredientInput").value);
+  $("ingredientInput").value = "";
+  $("ingredientInput").focus();
+});
+
+$("ingredientInput").addEventListener("keydown", event => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    $("addBtn").click();
+  }
+});
+
+function setPhoto(file) {
+  if (!file) return;
+  if (!file.type.startsWith("image/")) {
+    showMessage("Please choose a valid image file.");
+    return;
+  }
+  if (file.size > 15 * 1024 * 1024) {
+    showMessage("That image is larger than 15 MB. Choose a smaller photo.");
+    return;
+  }
+
+  selectedPhoto = file;
+  if (photoURL) URL.revokeObjectURL(photoURL);
+  photoURL = URL.createObjectURL(file);
+
+  $("photoPreview").src = photoURL;
+  $("photoPreview").style.display = "block";
+  $("uploadPrompt").style.display = "none";
+  $("removePhoto").style.display = "inline-block";
+  $("photoStatus").textContent = "Photo ready: " + file.name + ". Select Identify ingredients to scan if AI is connected.";
+  hideMessage();
+}
+
+$("photoInput").addEventListener("change", event => {
+  setPhoto(event.target.files[0]);
+});
+
+$("removePhoto").addEventListener("click", () => {
+  selectedPhoto = null;
+  $("photoInput").value = "";
+  $("photoPreview").removeAttribute("src");
+  $("photoPreview").style.display = "none";
+  $("uploadPrompt").style.display = "block";
+  $("removePhoto").style.display = "none";
+  $("photoStatus").textContent = "Photo preview works locally. AI identification requires a connected vision service.";
+  if (photoURL) URL.revokeObjectURL(photoURL);
+  photoURL = null;
+});
+
+const dropzone = $("dropzone");
+dropzone.addEventListener("dragover", event => {
+  event.preventDefault();
+  dropzone.style.borderColor = "#ffffff";
+});
+dropzone.addEventListener("dragleave", () => {
+  dropzone.style.borderColor = "";
+});
+dropzone.addEventListener("drop", event => {
+  event.preventDefault();
+  dropzone.style.borderColor = "";
+  setPhoto(event.dataTransfer.files[0]);
+});
+
+function showMessage(message) {
+  $("message").textContent = message;
+  $("message").style.display = "block";
+}
+function hideMessage() {
+  $("message").style.display = "none";
+}
+
+$("scanBtn").addEventListener("click", async () => {
+  hideMessage();
+
+  if (!selectedPhoto) {
+    showMessage("Upload a photo of your fridge or pantry first.");
+    return;
+  }
+
+  if (!AI_ENDPOINT) {
+    $("photoStatus").textContent = "Your photo is uploaded. AI scanning is not connected yet.";
+    showMessage("Photo uploaded successfully. Automatic ingredient recognition needs a secure AI backend. For now, add the ingredients you can see, then select Find my meals. Your photo has not been analyzed by AI.");
+    $("ingredientInput").focus();
+    return;
+  }
+
+  const button = $("scanBtn");
+  button.disabled = true;
+  button.textContent = "Analyzing photo…";
+  $("photoStatus").textContent = "Sending photo to your configured AI service…";
+
+  try {
+    const data = new FormData();
+    data.append("photo", selectedPhoto);
+
+    const response = await fetch(AI_ENDPOINT, {method:"POST", body:data});
+    if (!response.ok) throw new Error("The AI service returned an error (" + response.status + ").");
+
+    const result = await response.json();
+    if (!Array.isArray(result.ingredients)) {
+      throw new Error("The AI service did not return an ingredients list.");
+    }
+
+    addIngredients(result.ingredients.filter(x => typeof x === "string").join(","));
+    $("photoStatus").textContent = "Ingredient scan completed. Please review the detected foods.";
+    showMessage("Ingredients detected. Review the list for accuracy before finding recipes.");
+  } catch (error) {
+    showMessage("Could not analyze the photo. Check that your backend is running and configured correctly. " + error.message);
+    $("photoStatus").textContent = "Scan unsuccessful. You can still add ingredients manually.";
+  } finally {
+    button.disabled = false;
+    button.textContent = "✦ Identify ingredients";
+  }
+});
+
+$("demoBtn").addEventListener("click", () => {
+  addIngredients("eggs, chicken, pasta, cheese, tomatoes, garlic, rice, broccoli, bananas, oats, black beans");
+  hideMessage();
+  $("ingredientInput").value = "";
+});
+
+function ingredientMatch(a, b) {
+  const x = normalize(a);
+  const y = normalize(b);
+  return x === y || x.includes(y) || y.includes(x);
+}
+
+function getMatches(recipe) {
+  return recipe.ingredients.filter(required =>
+    ingredients.some(have => ingredientMatch(have, required))
+  );
+}
+
+function makeElement(tag, className, text) {
+  const element = document.createElement(tag);
+  if (className) element.className = className;
+  if (text !== undefined) element.textContent = text;
+  return element;
+}
+
+function renderRecipes() {
+  hideMessage();
+
+  if (!ingredients.length) {
+    showMessage("Add at least one ingredient before searching for meals.");
+    $("ingredientInput").focus();
+    return;
+  }
+
+  const diet = $("diet").value;
+  const maxTime = Number($("maxTime").value);
+
+  const ranked = recipes
+    .filter(recipe => recipe.time <= maxTime)
+    .filter(recipe => {
+      if (diet === "vegan") return recipe.category === "vegan";
+      if (diet === "vegetarian") return recipe.category === "vegetarian" || recipe.category === "vegan";
+      if (diet === "high-protein") return recipe.category === "high-protein";
+      return true;
+    })
+    .map(recipe => {
+      const matched = getMatches(recipe);
+      return {...recipe, matched, score: Math.round(matched.length / recipe.ingredients.length * 100)};
+    })
+    .filter(recipe => recipe.matched.length > 0)
+    .sort((a,b) => b.score - a.score || b.matched.length - a.matched.length)
+    .slice(0,9);
+
+  const grid = $("recipeGrid");
+  grid.replaceChildren();
+  $("recipeCount").textContent = ranked.length + (ranked.length === 1 ? " recipe found" : " recipes found");
+
+  if (!ranked.length) {
+    const empty = makeElement("div", "empty-results");
+    empty.appendChild(makeElement("strong", "", "Let's find a match."));
+    empty.appendChild(document.createTextNode("No recipes matched those ingredients and filters. Add more foods or select a longer cooking time."));
+    grid.appendChild(empty);
+  }
+
+  ranked.forEach((recipe, index) => {
+    const card = makeElement("article", "recipe-card");
+    const photo = makeElement("div", "recipe-image");
+    photo.style.backgroundImage = "linear-gradient(0deg,#102e2015,#102e2000),url('" + recipe.image + "')";
+
+    const fallback = makeElement("span", "food-emoji", recipe.emoji);
+    photo.appendChild(fallback);
+    const badge = makeElement("span", "match-pill", recipe.score + "% ingredient match");
+    photo.appendChild(badge);
+
+    // If the remote food image cannot load, retain a visible food illustration.
+    const image = new Image();
+    image.onerror = () => {
+      photo.style.backgroundImage = "none";
+      photo.style.backgroundColor = "#e8efe6";
+    };
+    image.src = recipe.image;
+
+    const body = makeElement("div", "recipe-body");
+    body.appendChild(makeElement("h3", "", recipe.name));
+    body.appendChild(makeElement("p", "", recipe.description));
+
+    const meta = makeElement("div", "recipe-meta");
+    meta.appendChild(makeElement("span", "", "◷ " + recipe.time + " min"));
+    meta.appendChild(makeElement("span", "", "✓ " + recipe.matched.length + " of " + recipe.ingredients.length + " core ingredients"));
+    body.appendChild(meta);
+
+    const matchedText = recipe.matched.length
+      ? "You have: " + recipe.matched.join(", ")
+      : "No matching ingredients";
+    const missing = recipe.ingredients.filter(required =>
+      !recipe.matched.some(have => ingredientMatch(have, required))
+    );
+    const matchInfo = makeElement("div", "match-info", matchedText + (missing.length ? " · Still needed: " + missing.join(", ") : " · You have all core ingredients."));
+    body.appendChild(matchInfo);
+
+    const toggle = makeElement("button", "recipe-button", "View cooking instructions ↓");
+    toggle.type = "button";
+    toggle.setAttribute("aria-expanded", "false");
+
+    const details = makeElement("div", "details");
+    details.appendChild(makeElement("h4", "", "Ingredients"));
+    const ingredientUl = makeElement("ul");
+    recipe.ingredients.forEach(item => ingredientUl.appendChild(makeElement("li", "", item)));
+    recipe.optional.forEach(item => ingredientUl.appendChild(makeElement("li", "", item + " (optional)")));
+    details.appendChild(ingredientUl);
+
+    details.appendChild(makeElement("h4", "", "Method"));
+    const steps = makeElement("ol");
+    recipe.steps.forEach(step => steps.appendChild(makeElement("li", "", step)));
+    details.appendChild(steps);
+
+    details.appendChild(makeElement("p", "", "Cooking times are estimates. Check that meat and other foods are cooked safely."));
+    toggle.addEventListener("click", () => {
+      const opening = details.style.display !== "block";
+      details.style.display = opening ? "block" : "none";
+      toggle.textContent = opening ? "Hide cooking instructions ↑" : "View cooking instructions ↓";
+      toggle.setAttribute("aria-expanded", String(opening));
+    });
+
+    body.append(toggle, details);
+    card.append(photo, body);
+    grid.appendChild(card);
+  });
+
+  $("results").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+$("findBtn").addEventListener("click", renderRecipes);
+
+updateIngredients();
+</script>
+</body>
+</html>
