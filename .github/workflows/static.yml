@@ -1,0 +1,1836 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pantry to Plate | Your Kitchen Companion</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap');
+
+:root {
+  --forest:#183d32;
+  --green:#347454;
+  --sage:#eaf1e9;
+  --cream:#f8f8f4;
+  --orange:#d98c60;
+  --ink:#27372f;
+  --muted:#849087;
+  --line:#e6eae3;
+  --white:#fff;
+  --shadow:0 10px 35px rgba(24,61,50,.07);
+}
+
+* {
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html {scroll-behavior:smooth;}
+
+body {
+  font-family:'DM Sans',sans-serif;
+  background:var(--cream);
+  color:var(--ink);
+}
+
+button,input,select,textarea {font:inherit;}
+button {cursor:pointer;}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline:3px solid #9dbda2;
+  outline-offset:3px;
+}
+
+.topbar {
+  height:76px;
+  background:white;
+  border-bottom:1px solid var(--line);
+  padding:0 5%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:var(--forest);
+  font-weight:800;
+  font-size:21px;
+  text-decoration:none;
+}
+
+.brand-mark {
+  background:var(--forest);
+  color:white;
+  height:39px;
+  width:39px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  font-size:21px;
+}
+
+.brand-orange {color:var(--orange);}
+
+.nav {
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+.nav button {
+  border:0;
+  background:transparent;
+  padding:11px 15px;
+  color:#68756c;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.nav button:hover,
+.nav button.active {
+  background:var(--sage);
+  color:var(--forest);
+}
+
+.nav-count {
+  background:var(--orange);
+  color:white;
+  border-radius:20px;
+  padding:2px 6px;
+  font-size:9px;
+  margin-left:4px;
+}
+
+main {
+  max-width:1250px;
+  margin:auto;
+  padding:35px 25px 70px;
+}
+
+.page {display:none;}
+.page.active {display:block;}
+
+.eyebrow {
+  color:var(--green);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:2px;
+  margin-bottom:11px;
+}
+
+h1,h2,h3,.serif {
+  font-family:'Playfair Display',serif;
+  color:var(--forest);
+}
+
+h1 {
+  font-size:clamp(35px,5vw,54px);
+  line-height:1.12;
+  font-weight:600;
+}
+
+h2 {font-size:29px;}
+h3 {font-size:21px;}
+
+p {
+  line-height:1.7;
+}
+
+.muted {
+  color:var(--muted);
+  font-size:12px;
+}
+
+.page-heading {
+  margin-bottom:28px;
+}
+
+.page-heading p {
+  margin-top:10px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.hero {
+  background:var(--forest);
+  border-radius:19px;
+  padding:42px;
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  align-items:center;
+  gap:30px;
+  color:white;
+  margin-bottom:32px;
+  overflow:hidden;
+}
+
+.hero h1 {
+  color:white;
+  max-width:550px;
+}
+
+.hero p {
+  color:#c8d8cd;
+  font-size:13px;
+  max-width:460px;
+  margin:15px 0 22px;
+}
+
+.hero .eyebrow {color:#c5d8c7;}
+
+.hero-visual {
+  text-align:center;
+  font-size:110px;
+  background:#ffffff0c;
+  border:1px solid #ffffff15;
+  border-radius:20px;
+  padding:25px;
+}
+
+.btn {
+  border:0;
+  border-radius:8px;
+  padding:13px 18px;
+  font-size:12px;
+  font-weight:800;
+  transition:.2s;
+}
+
+.btn-primary {
+  background:var(--orange);
+  color:white;
+}
+
+.btn-primary:hover {background:#c9794e;}
+
+.btn-white {
+  background:white;
+  color:var(--forest);
+}
+
+.btn-dark {
+  background:var(--forest);
+  color:white;
+}
+
+.btn-dark:hover {background:var(--green);}
+
+.btn-light {
+  background:var(--sage);
+  color:var(--forest);
+}
+
+.btn-outline {
+  background:white;
+  color:var(--forest);
+  border:1px solid var(--line);
+}
+
+.btn:disabled {
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.stats {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-bottom:35px;
+}
+
+.stat {
+  background:white;
+  border:1px solid var(--line);
+  padding:21px;
+  border-radius:13px;
+  box-shadow:var(--shadow);
+}
+
+.stat-icon {font-size:23px;margin-bottom:12px;}
+
+.stat-number {
+  font-size:29px;
+  font-weight:800;
+  color:var(--forest);
+}
+
+.stat-label {
+  color:var(--muted);
+  font-size:11px;
+  margin-top:4px;
+}
+
+.section-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.section-head p {
+  color:var(--muted);
+  font-size:12px;
+  margin-top:6px;
+}
+
+.text-button {
+  border:0;
+  background:none;
+  color:var(--green);
+  font-size:12px;
+  font-weight:800;
+}
+
+.recipe-grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:19px;
+}
+
+.recipe-card {
+  background:white;
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+  transition:.2s;
+  min-width:0;
+}
+
+.recipe-card:hover {
+  transform:translateY(-4px);
+  box-shadow:var(--shadow);
+}
+
+.recipe-image {
+  height:190px;
+  background:#e7eee5 center/cover;
+  position:relative;
+  display:grid;
+  place-items:center;
+}
+
+.recipe-emoji {font-size:60px;}
+
+.recipe-badge {
+  position:absolute;
+  left:12px;
+  top:12px;
+  background:white;
+  color:var(--green);
+  padding:7px 10px;
+  border-radius:6px;
+  font-size:10px;
+  font-weight:800;
+}
+
+.favorite-btn {
+  position:absolute;
+  right:12px;
+  top:12px;
+  width:36px;
+  height:36px;
+  border:0;
+  border-radius:50%;
+  background:white;
+  font-size:18px;
+  color:#999;
+}
+
+.favorite-btn.saved {color:#d76d62;}
+
+.recipe-body {padding:18px;}
+
+.recipe-body h3 {margin-bottom:8px;}
+
+.recipe-description {
+  font-size:11px;
+  color:var(--muted);
+  min-height:39px;
+}
+
+.recipe-meta {
+  display:flex;
+  gap:12px;
+  margin:14px 0;
+  font-size:10px;
+  color:#718075;
+  flex-wrap:wrap;
+}
+
+.match-info {
+  background:#f0f5ee;
+  color:var(--green);
+  padding:10px;
+  border-radius:7px;
+  font-size:10px;
+  line-height:1.7;
+  margin-bottom:12px;
+}
+
+.recipe-actions {
+  display:flex;
+  gap:8px;
+}
+
+.recipe-actions button {
+  flex:1;
+  padding:11px 8px;
+  border:0;
+  border-radius:7px;
+  background:var(--sage);
+  color:var(--forest);
+  font-size:10px;
+  font-weight:800;
+}
+
+.recipe-actions button:hover {background:#dce9dc;}
+
+.details {
+  display:none;
+  border-top:1px solid var(--line);
+  padding-top:14px;
+  margin-top:14px;
+  font-size:11px;
+  color:#66736a;
+  line-height:1.8;
+}
+
+.details.open {display:block;}
+
+.details h4 {
+  color:var(--forest);
+  margin:12px 0 5px;
+}
+
+.details ul,.details ol {padding-left:18px;}
+
+.details li {margin-bottom:5px;}
+
+.empty-state {
+  background:white;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:45px 20px;
+  text-align:center;
+  grid-column:1/-1;
+}
+
+.empty-state .big-icon {font-size:48px;margin-bottom:12px;}
+
+.empty-state h3 {margin-bottom:9px;}
+
+.empty-state p {
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:17px;
+}
+
+.split-layout {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:22px;
+}
+
+.panel {
+  background:white;
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:26px;
+  min-width:0;
+}
+
+.panel h2 {margin-bottom:9px;}
+
+.panel-description {
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:22px;
+}
+
+.dropzone {
+  min-height:220px;
+  border:2px dashed #a5b9a7;
+  background:#f2f6f0;
+  border-radius:12px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  text-align:center;
+  padding:20px;
+  overflow:hidden;
+}
+
+.dropzone:hover {background:#e8f0e7;}
+
+.dropzone-icon {font-size:40px;margin-bottom:12px;}
+
+.dropzone strong {font-size:13px;color:var(--forest);}
+
+.dropzone small {
+  color:var(--muted);
+  font-size:10px;
+  margin-top:8px;
+}
+
+#photoPreview {
+  max-width:100%;
+  max-height:300px;
+  object-fit:contain;
+  display:none;
+  border-radius:8px;
+}
+
+#photoInput {display:none;}
+
+.photo-actions {
+  display:flex;
+  gap:9px;
+  margin-top:13px;
+  flex-wrap:wrap;
+}
+
+.input-row {
+  display:flex;
+  gap:9px;
+  margin-top:18px;
+}
+
+.input {
+  width:100%;
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:white;
+  font-size:12px;
+  min-width:0;
+}
+
+.input:focus {
+  border-color:var(--green);
+}
+
+.ingredient-list {
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  margin:20px 0;
+  min-height:50px;
+}
+
+.ingredient-chip {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 12px;
+  border-radius:7px;
+  background:var(--sage);
+  color:var(--forest);
+  font-size:11px;
+  font-weight:700;
+}
+
+.ingredient-chip button {
+  background:none;
+  border:0;
+  color:#78917e;
+  font-size:16px;
+}
+
+.filters {
+  display:flex;
+  gap:10px;
+  margin-bottom:23px;
+  flex-wrap:wrap;
+}
+
+.filters .input {max-width:240px;}
+
+.notice {
+  display:none;
+  padding:13px 15px;
+  border-radius:8px;
+  background:#fff2e6;
+  color:#87552d;
+  font-size:12px;
+  line-height:1.7;
+  margin-bottom:18px;
+}
+
+.food-log {
+  display:grid;
+  gap:13px;
+}
+
+.meal-entry {
+  background:white;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:19px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+}
+
+.meal-entry h3 {font-size:18px;}
+
+.meal-entry p {
+  color:var(--muted);
+  font-size:11px;
+  margin-top:5px;
+}
+
+.delete-btn {
+  background:#fff0ed;
+  color:#b75c51;
+  border:0;
+  border-radius:7px;
+  padding:9px 12px;
+  font-size:11px;
+  font-weight:800;
+}
+
+.modal {
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#10261ed9;
+  z-index:50;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.modal.open {display:flex;}
+
+.modal-content {
+  width:100%;
+  max-width:480px;
+  background:white;
+  padding:28px;
+  border-radius:16px;
+  max-height:90vh;
+  overflow-y:auto;
+}
+
+.modal-content h2 {margin-bottom:10px;}
+
+.modal-content label {
+  display:block;
+  font-size:11px;
+  font-weight:800;
+  color:var(--forest);
+  margin:15px 0 7px;
+}
+
+.modal-content textarea {
+  resize:vertical;
+  min-height:90px;
+}
+
+.modal-actions {
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.modal-actions button {flex:1;}
+
+.toast {
+  position:fixed;
+  bottom:25px;
+  right:25px;
+  background:var(--forest);
+  color:white;
+  padding:14px 19px;
+  border-radius:9px;
+  font-size:12px;
+  z-index:100;
+  opacity:0;
+  transform:translateY(15px);
+  transition:.25s;
+  pointer-events:none;
+}
+
+.toast.show {
+  opacity:1;
+  transform:translateY(0);
+}
+
+footer {
+  background:var(--forest);
+  color:#c8d8cd;
+  padding:30px 6%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+  font-size:11px;
+}
+
+footer .brand {color:white;}
+
+@media(max-width:900px) {
+  .recipe-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+  .hero {grid-template-columns:1fr;}
+  .hero-visual {display:none;}
+}
+
+@media(max-width:650px) {
+  .topbar {
+    height:auto;
+    padding:13px;
+    flex-direction:column;
+    gap:12px;
+  }
+  .nav {
+    width:100%;
+    overflow-x:auto;
+    justify-content:flex-start;
+  }
+  .nav button {white-space:nowrap;padding:9px;}
+  main {padding:25px 14px 45px;}
+  .hero {padding:26px;}
+  .stats {gap:8px;}
+  .stat {padding:13px;}
+  .stat-number {font-size:22px;}
+  .recipe-grid {grid-template-columns:1fr;}
+  .split-layout {grid-template-columns:1fr;}
+  .filters .input {max-width:none;}
+  footer {flex-direction:column;align-items:flex-start;}
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <a href="#" class="brand" onclick="showPage('home');return false;">
+    <span class="brand-mark">✳</span>
+    Pantry<span class="brand-orange">to</span>Plate
+  </a>
+
+  <nav class="nav">
+    <button class="active" data-page="home" onclick="showPage('home')">Home</button>
+    <button data-page="kitchen" onclick="showPage('kitchen')">My Kitchen</button>
+    <button data-page="recipes" onclick="showPage('recipes')">Recipes</button>
+    <button data-page="favorites" onclick="showPage('favorites')">♥ Favorites <span class="nav-count" id="favoriteCount">0</span></button>
+    <button data-page="meals" onclick="showPage('meals')">My Meals</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- HOME PAGE -->
+
+<section class="page active" id="home">
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">YOUR PERSONAL KITCHEN COMPANION</div>
+      <h1>Good food starts with what you have.</h1>
+      <p>Discover new recipes, organize your kitchen, save your favorites, and keep track of every meal you make.</p>
+      <button class="btn btn-primary" onclick="showPage('kitchen')">Explore my kitchen →</button>
+      <button class="btn btn-white" onclick="showPage('recipes')" style="margin-left:7px">Explore recipes</button>
+    </div>
+    <div class="hero-visual">🥑 🥕 🍅</div>
+  </section>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-icon">🥬</div>
+      <div class="stat-number" id="homeIngredients">0</div>
+      <div class="stat-label">Kitchen ingredients</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">♥</div>
+      <div class="stat-number" id="homeFavorites">0</div>
+      <div class="stat-label">Favorite recipes</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">🍽️</div>
+      <div class="stat-number" id="homeMeals">0</div>
+      <div class="stat-label">Meals you've made</div>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">YOUR NEXT MEAL</div>
+      <h2>Popular recipes</h2>
+      <p>Get inspired by something delicious.</p>
+    </div>
+    <button class="text-button" onclick="showPage('recipes')">View all recipes →</button>
+  </div>
+
+  <div class="recipe-grid" id="homeRecipes"></div>
+
+</section>
+
+<!-- KITCHEN PAGE -->
+
+<section class="page" id="kitchen">
+
+  <div class="page-heading">
+    <div class="eyebrow">YOUR PERSONAL PANTRY</div>
+    <h1>My Kitchen</h1>
+    <p>Keep track of what's in your kitchen and discover meals you can make.</p>
+  </div>
+
+  <div class="split-layout">
+
+    <div class="panel">
+      <div class="eyebrow">STEP 01</div>
+      <h2>Upload your kitchen</h2>
+      <p class="panel-description">Take a picture of your fridge, pantry, or groceries.</p>
+
+      <label class="dropzone" id="dropzone" for="photoInput">
+        <img id="photoPreview" alt="Kitchen preview">
+        <div id="uploadPrompt">
+          <div class="dropzone-icon">📷</div>
+          <strong>Upload a kitchen photo</strong>
+          <small>Click to browse or drag a photo here</small>
+        </div>
+      </label>
+
+      <input type="file" id="photoInput" accept="image/*">
+
+      <div class="photo-actions">
+        <button class="btn btn-dark" id="scanBtn">✦ Identify ingredients</button>
+        <button class="btn btn-outline" id="removePhoto" style="display:none">Remove photo</button>
+      </div>
+
+      <p class="muted" id="photoStatus" style="margin-top:13px">
+        Photo preview is available. Automatic AI identification requires a connected AI service.
+      </p>
+    </div>
+
+    <div class="panel">
+      <div class="eyebrow">STEP 02</div>
+      <h2>Your ingredients</h2>
+      <p class="panel-description">Add everything you currently have available.</p>
+
+      <div class="ingredient-list" id="ingredientList"></div>
+
+      <div class="input-row">
+        <input class="input" id="ingredientInput" placeholder="Add an ingredient...">
+        <button class="btn btn-dark" id="addIngredient">Add</button>
+      </div>
+
+      <button class="btn btn-light" style="margin-top:12px;width:100%" id="sampleIngredients">
+        Try sample ingredients
+      </button>
+
+      <button class="btn btn-outline" style="margin-top:9px;width:100%" id="clearIngredients">
+        Clear my kitchen
+      </button>
+
+      <div style="margin-top:22px;border-top:1px solid var(--line);padding-top:18px">
+        <div class="eyebrow">STEP 03</div>
+        <h3>Find something to make</h3>
+
+        <label class="muted" for="diet" style="display:block;margin:12px 0 6px">Meal preference</label>
+        <select class="input" id="diet">
+          <option value="all">Everything</option>
+          <option value="vegetarian">Vegetarian</option>
+          <option value="vegan">Vegan</option>
+          <option value="high-protein">High protein</option>
+        </select>
+
+        <label class="muted" for="maxTime" style="display:block;margin:12px 0 6px">Cooking time</label>
+        <select class="input" id="maxTime">
+          <option value="999">Any cooking time</option>
+          <option value="15">15 minutes or less</option>
+          <option value="30">30 minutes or less</option>
+          <option value="45">45 minutes or less</option>
+        </select>
+
+        <button class="btn btn-primary" style="width:100%;margin-top:15px" onclick="findMeals()">
+          Find my meals →
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="kitchenNotice" class="notice" style="margin-top:20px"></div>
+
+</section>
+
+<!-- RECIPES PAGE -->
+
+<section class="page" id="recipes">
+
+  <div class="page-heading">
+    <div class="eyebrow">DISCOVER SOMETHING NEW</div>
+    <h1>Recipe Collection</h1>
+    <p>Explore recipes, find inspiration, and save meals for another day.</p>
+  </div>
+
+  <div class="filters">
+    <input class="input" id="recipeSearch" placeholder="🔍 Search recipes..." oninput="renderAllRecipes()">
+
+    <select class="input" id="recipeCategory" onchange="renderAllRecipes()">
+      <option value="all">All categories</option>
+      <option value="vegetarian">Vegetarian</option>
+      <option value="vegan">Vegan</option>
+      <option value="high-protein">High protein</option>
+    </select>
+
+    <select class="input" id="recipeTime" onchange="renderAllRecipes()">
+      <option value="999">Any cooking time</option>
+      <option value="15">15 minutes</option>
+      <option value="30">30 minutes</option>
+      <option value="45">45 minutes</option>
+    </select>
+  </div>
+
+  <div class="recipe-grid" id="allRecipes"></div>
+
+</section>
+
+<!-- FAVORITES PAGE -->
+
+<section class="page" id="favorites">
+
+  <div class="page-heading">
+    <div class="eyebrow">YOUR PERSONAL COOKBOOK</div>
+    <h1>Favorite Recipes ♥</h1>
+    <p>All the recipes you've saved in one convenient place.</p>
+  </div>
+
+  <div class="recipe-grid" id="favoriteRecipes"></div>
+
+</section>
+
+<!-- MY MEALS PAGE -->
+
+<section class="page" id="meals">
+
+  <div class="page-heading">
+    <div class="eyebrow">YOUR COOKING JOURNEY</div>
+    <h1>My Meals</h1>
+    <p>Keep a personal record of meals you've made and enjoyed.</p>
+  </div>
+
+  <div class="panel" style="margin-bottom:24px">
+    <div class="eyebrow">PERSONAL FOOD JOURNAL</div>
+    <h2>Save a meal you've made</h2>
+    <p class="panel-description">Record what you cooked, when you made it, and any notes you'd like to remember.</p>
+
+    <button class="btn btn-dark" onclick="openMealModal()">+ Add a meal</button>
+  </div>
+
+  <div class="section-head">
+    <div>
+      <h2>Your cooking history</h2>
+      <p>Every meal you've saved appears here.</p>
+    </div>
+    <span class="muted" id="mealTotal">0 meals</span>
+  </div>
+
+  <div class="food-log" id="mealLog"></div>
+
+</section>
+
+</main>
+
+<footer>
+  <div>
+    <div class="brand">
+      <span class="brand-mark">✳</span>
+      Pantry<span class="brand-orange">to</span>Plate
+    </div>
+    <p style="margin-top:10px">A little creativity. A lot less food waste.</p>
+  </div>
+  <p>Made for your kitchen.<br>Discover. Cook. Save. Repeat.</p>
+</footer>
+
+<!-- SAVE MEAL MODAL -->
+
+<div class="modal" id="mealModal">
+  <div class="modal-content">
+    <div class="eyebrow">YOUR FOOD JOURNAL</div>
+    <h2>Save your meal</h2>
+    <p class="muted">Add a meal to your personal cooking history.</p>
+
+    <label for="mealName">Meal name</label>
+    <input class="input" id="mealName" placeholder="Example: Homemade chicken pasta">
+
+    <label for="mealDate">Date made</label>
+    <input class="input" type="date" id="mealDate">
+
+    <label for="mealRecipe">Recipe (optional)</label>
+    <select class="input" id="mealRecipe">
+      <option value="">My own meal</option>
+    </select>
+
+    <label for="mealNotes">Notes (optional)</label>
+    <textarea class="input" id="mealNotes" placeholder="What did you like? What would you change?"></textarea>
+
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeMealModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveMeal()">Save meal</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+/* =====================================
+   PANTRY TO PLATE
+   LOCAL DATA STORAGE
+===================================== */
+
+const $ = id => document.getElementById(id);
+
+function loadData(key, fallback) {
+  try {
+    const value = localStorage.getItem(key);
+    return value ? JSON.parse(value) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function saveData(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    showToast("Could not save. Browser storage may be full.");
+  }
+}
+
+let ingredients = loadData("ptp_ingredients", []);
+let favorites = loadData("ptp_favorites", []);
+let meals = loadData("ptp_meals", []);
+let selectedPhoto = null;
+let photoURL = null;
+
+/* =====================================
+   RECIPE DATABASE
+===================================== */
+
+const recipes = [
+
+{
+ name:"Garlic Butter Pasta",
+ time:15,
+ emoji:"🍝",
+ category:"vegetarian",
+ image:"https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=800&q=80",
+ ingredients:["pasta","garlic","butter","cheese"],
+ optional:["olive oil","black pepper"],
+ description:"Comforting pasta with garlic and a delicious buttery finish.",
+ steps:[
+  "Boil pasta according to package directions.",
+  "Melt butter in a pan and gently cook minced garlic.",
+  "Add drained pasta and a splash of pasta water.",
+  "Toss with cheese and black pepper. Serve."
+ ]
+},
+
+{
+ name:"Garden Veggie Omelette",
+ time:12,
+ emoji:"🍳",
+ category:"vegetarian",
+ image:"https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=800&q=80",
+ ingredients:["eggs","cheese","tomatoes","spinach"],
+ optional:["onion","butter"],
+ description:"A quick breakfast filled with fresh vegetables and cheese.",
+ steps:[
+  "Whisk the eggs in a bowl.",
+  "Chop vegetables and sauté briefly.",
+  "Pour in eggs and cook over medium-low heat.",
+  "Add cheese and fold until eggs are fully set."
+ ]
+},
+
+{
+ name:"Chicken Rice Bowl",
+ time:30,
+ emoji:"🍚",
+ category:"high-protein",
+ image:"https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=800&q=80",
+ ingredients:["chicken","rice","broccoli","carrots"],
+ optional:["soy sauce","garlic"],
+ description:"A filling bowl with tender chicken, rice, and vegetables.",
+ steps:[
+  "Cook rice according to package instructions.",
+  "Cut chicken into pieces and cook completely.",
+  "Cook vegetables until tender.",
+  "Serve chicken and vegetables over rice."
+ ]
+},
+
+{
+ name:"Tomato Cheese Quesadilla",
+ time:15,
+ emoji:"🌮",
+ category:"vegetarian",
+ image:"https://images.unsplash.com/photo-1618040996337-56904b7850b9?auto=format&fit=crop&w=800&q=80",
+ ingredients:["tortillas","cheese","tomatoes"],
+ optional:["onion","beans","corn"],
+ description:"Golden tortillas filled with melted cheese and tomatoes.",
+ steps:[
+  "Dice tomatoes and other vegetables.",
+  "Place cheese and filling over half a tortilla.",
+  "Fold and cook until golden on both sides.",
+  "Check the filling is hot before serving."
+ ]
+},
+
+{
+ name:"Creamy Chicken Pasta",
+ time:30,
+ emoji:"🍜",
+ category:"high-protein",
+ image:"https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=800&q=80",
+ ingredients:["chicken","pasta","milk","garlic"],
+ optional:["cheese","butter"],
+ description:"Tender chicken and pasta in a creamy garlic sauce.",
+ steps:[
+  "Boil pasta until tender.",
+  "Cut chicken into pieces and cook completely.",
+  "Add garlic, milk, and cheese.",
+  "Mix with pasta and serve."
+ ]
+},
+
+{
+ name:"Chickpea Tomato Bowl",
+ time:15,
+ emoji:"🥗",
+ category:"vegan",
+ image:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80",
+ ingredients:["chickpeas","tomatoes","spinach","rice"],
+ optional:["lemon","olive oil","cucumber"],
+ description:"A fresh plant-based bowl with chickpeas and vegetables.",
+ steps:[
+  "Rinse and drain chickpeas.",
+  "Warm them in a pan with seasoning.",
+  "Add tomatoes and spinach.",
+  "Serve over cooked rice."
+ ]
+},
+
+{
+ name:"Peanut Noodle Bowl",
+ time:20,
+ emoji:"🥜",
+ category:"vegan",
+ image:"https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80",
+ ingredients:["noodles","peanut butter","soy sauce","garlic"],
+ optional:["carrots","lime"],
+ description:"Savory noodles covered in a simple peanut sauce.",
+ steps:[
+  "Cook noodles according to package directions.",
+  "Mix peanut butter, soy sauce, garlic, and warm water.",
+  "Toss noodles with the sauce.",
+  "Add vegetables and serve."
+ ]
+},
+
+{
+ name:"Loaded Baked Potato",
+ time:40,
+ emoji:"🥔",
+ category:"vegetarian",
+ image:"https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80",
+ ingredients:["potatoes","cheese","butter"],
+ optional:["beans","broccoli","yogurt"],
+ description:"A warm baked potato with your favorite toppings.",
+ steps:[
+  "Scrub the potato and pierce the skin.",
+  "Bake at 425°F until soft.",
+  "Split carefully and fluff the inside.",
+  "Add butter, cheese, and toppings."
+ ]
+},
+
+{
+ name:"Banana Oat Pancakes",
+ time:15,
+ emoji:"🥞",
+ category:"vegetarian",
+ image:"https://images.unsplash.com/photo-1528207776546-365bb710ee93?auto=format&fit=crop&w=800&q=80",
+ ingredients:["banana","oats","eggs"],
+ optional:["milk","cinnamon"],
+ description:"Easy breakfast pancakes made from everyday ingredients.",
+ steps:[
+  "Mash a ripe banana.",
+  "Mix with eggs and oats.",
+  "Add small portions to a greased skillet.",
+  "Cook both sides until fully set."
+ ]
+},
+
+{
+ name:"Black Bean Rice Bowl",
+ time:20,
+ emoji:"🫘",
+ category:"vegan",
+ image:"https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=800&q=80",
+ ingredients:["black beans","rice","corn","tomatoes"],
+ optional:["lime","avocado","onion"],
+ description:"A colorful plant-based meal with beans and rice.",
+ steps:[
+  "Cook rice.",
+  "Rinse and drain beans.",
+  "Warm beans and corn with seasoning.",
+  "Serve over rice with tomatoes."
+ ]
+}
+
+];
+
+/* =====================================
+   NAVIGATION
+===================================== */
+
+function showPage(page) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".nav button").forEach(b => b.classList.remove("active"));
+
+  $(page).classList.add("active");
+
+  const navButton = document.querySelector('[data-page="' + page + '"]');
+  if(navButton) navButton.classList.add("active");
+
+  if(page === "favorites") renderFavorites();
+  if(page === "meals") renderMeals();
+  if(page === "recipes") renderAllRecipes();
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* =====================================
+   TOAST MESSAGE
+===================================== */
+
+let toastTimer;
+
+function showToast(message) {
+  const toast = $("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove("show");
+  },2500);
+}
+
+/* =====================================
+   INGREDIENTS
+===================================== */
+
+function normalize(value) {
+  return value.toLowerCase().trim().replace(/s$/,"");
+}
+
+function addIngredients(value) {
+  const additions = value.split(",")
+    .map(x => x.trim().toLowerCase())
+    .filter(Boolean);
+
+  let added = 0;
+
+  additions.forEach(item => {
+    if(item.length > 40) return;
+
+    if(!ingredients.some(x => normalize(x) === normalize(item))) {
+      ingredients.push(item);
+      added++;
+    }
+  });
+
+  saveData("ptp_ingredients",ingredients);
+  renderIngredients();
+  updateStats();
+
+  if(added) showToast(added + " ingredient(s) added");
+}
+
+function renderIngredients() {
+  const list = $("ingredientList");
+  list.replaceChildren();
+
+  if(!ingredients.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "No ingredients added yet.";
+    list.appendChild(empty);
+  }
+
+  ingredients.forEach((item,index) => {
+    const chip = document.createElement("span");
+    chip.className = "ingredient-chip";
+
+    const name = document.createElement("span");
+    name.textContent = item;
+
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.textContent = "×";
+    remove.setAttribute("aria-label","Remove " + item);
+
+    remove.onclick = () => {
+      ingredients.splice(index,1);
+      saveData("ptp_ingredients",ingredients);
+      renderIngredients();
+      updateStats();
+    };
+
+    chip.append(name,remove);
+    list.appendChild(chip);
+  });
+}
+
+$("addIngredient").addEventListener("click",() => {
+  addIngredients($("ingredientInput").value);
+  $("ingredientInput").value = "";
+  $("ingredientInput").focus();
+});
+
+$("ingredientInput").addEventListener("keydown",e => {
+  if(e.key === "Enter") $("addIngredient").click();
+});
+
+$("sampleIngredients").addEventListener("click",() => {
+  addIngredients("eggs, chicken, pasta, cheese, tomatoes, garlic, rice, broccoli, bananas, oats, black beans");
+});
+
+$("clearIngredients").addEventListener("click",() => {
+  if(!ingredients.length) return;
+
+  if(confirm("Clear all your kitchen ingredients?")) {
+    ingredients = [];
+    saveData("ptp_ingredients",ingredients);
+    renderIngredients();
+    updateStats();
+    showToast("Kitchen cleared");
+  }
+});
+
+/* =====================================
+   MATCHING RECIPES
+===================================== */
+
+function ingredientMatch(a,b) {
+  const x = normalize(a);
+  const y = normalize(b);
+  return x === y || x.includes(y) || y.includes(x);
+}
+
+function getMatches(recipe) {
+  return recipe.ingredients.filter(required =>
+    ingredients.some(have => ingredientMatch(have,required))
+  );
+}
+
+function getRankedRecipes() {
+  const diet = $("diet").value;
+  const maxTime = Number($("maxTime").value);
+
+  return recipes.map(recipe => {
+    const matched = getMatches(recipe);
+
+    return {
+      ...recipe,
+      matched,
+      score:Math.round(matched.length / recipe.ingredients.length * 100)
+    };
+  })
+  .filter(recipe => recipe.matched.length > 0)
+  .filter(recipe => recipe.time <= maxTime)
+  .filter(recipe => {
+    if(diet === "vegan") return recipe.category === "vegan";
+    if(diet === "vegetarian") return ["vegetarian","vegan"].includes(recipe.category);
+    if(diet === "high-protein") return recipe.category === "high-protein";
+    return true;
+  })
+  .sort((a,b) => b.score - a.score);
+}
+
+function findMeals() {
+  if(!ingredients.length) {
+    $("kitchenNotice").textContent = "Add some ingredients first so we can find meals for you.";
+    $("kitchenNotice").style.display = "block";
+    return;
+  }
+
+  $("kitchenNotice").style.display = "none";
+
+  const matches = getRankedRecipes();
+
+  showPage("recipes");
+
+  $("recipeSearch").value = "";
+  $("recipeCategory").value = "all";
+  $("recipeTime").value = "999";
+
+  renderAllRecipes(matches);
+
+  showToast(matches.length + " matching recipes found");
+}
+
+/* =====================================
+   FAVORITES
+===================================== */
+
+function toggleFavorite(name) {
+  if(favorites.includes(name)) {
+    favorites = favorites.filter(x => x !== name);
+    showToast("Removed from favorites");
+  } else {
+    favorites.push(name);
+    showToast("Saved to your favorites ♥");
+  }
+
+  saveData("ptp_favorites",favorites);
+
+  renderFavorites();
+  renderAllRecipes();
+  renderHomeRecipes();
+  updateStats();
+}
+
+function isFavorite(name) {
+  return favorites.includes(name);
+}
+
+/* =====================================
+   RECIPE CARD CREATION
+===================================== */
+
+function createRecipeCard(recipe,showMatch = false) {
+  const card = document.createElement("article");
+  card.className = "recipe-card";
+
+  const photo = document.createElement("div");
+  photo.className = "recipe-image";
+  photo.style.backgroundImage = "url(" + JSON.stringify(recipe.image) + ")";
+
+  const emoji = document.createElement("span");
+  emoji.className = "recipe-emoji";
+  emoji.textContent = recipe.emoji;
+  photo.appendChild(emoji);
+
+  const badge = document.createElement("span");
+  badge.className = "recipe-badge";
+  badge.textContent = showMatch ? recipe.score + "% ingredient match" : recipe.category;
+  photo.appendChild(badge);
+
+  const heart = document.createElement("button");
+  heart.className = "favorite-btn" + (isFavorite(recipe.name) ? " saved" : "");
+  heart.textContent = isFavorite(recipe.name) ? "♥" : "♡";
+  heart.setAttribute("aria-label","Toggle favorite");
+  heart.onclick = () => toggleFavorite(recipe.name);
+  photo.appendChild(heart);
+
+  const body = document.createElement("div");
+  body.className = "recipe-body";
+
+  const title = document.createElement("h3");
+  title.textContent = recipe.name;
+
+  const description = document.createElement("p");
+  description.className = "recipe-description";
+  description.textContent = recipe.description;
+
+  const meta = document.createElement("div");
+  meta.className = "recipe-meta";
+  meta.textContent = "◷ " + recipe.time + " minutes  ·  " + recipe.ingredients.length + " main ingredients";
+
+  body.append(title,description,meta);
+
+  if(showMatch) {
+    const missing = recipe.ingredients.filter(item =>
+      !recipe.matched.some(have => ingredientMatch(have,item))
+    );
+
+    const info = document.createElement("div");
+    info.className = "match-info";
+    info.textContent = "You have: " + recipe.matched.join(", ") +
+      (missing.length ? " · Still needed: " + missing.join(", ") : " · You have everything!");
+    body.appendChild(info);
+  }
+
+  const actions = document.createElement("div");
+  actions.className = "recipe-actions";
+
+  const view = document.createElement("button");
+  view.textContent = "View recipe ↓";
+
+  const details = document.createElement("div");
+  details.className = "details";
+
+  const ingredientHeading = document.createElement("h4");
+  ingredientHeading.textContent = "Ingredients";
+
+  const ingredientUl = document.createElement("ul");
+
+  [...recipe.ingredients,...recipe.optional.map(x => x + " (optional)")].forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = item;
+    ingredientUl.appendChild(li);
+  });
+
+  const methodHeading = document.createElement("h4");
+  methodHeading.textContent = "Cooking instructions";
+
+  const steps = document.createElement("ol");
+
+  recipe.steps.forEach(step => {
+    const li = document.createElement("li");
+    li.textContent = step;
+    steps.appendChild(li);
+  });
+
+  details.append(ingredientHeading,ingredientUl,methodHeading,steps);
+
+  view.onclick = () => {
+    details.classList.toggle("open");
+    view.textContent = details.classList.contains("open") ? "Hide recipe ↑" : "View recipe ↓";
+  };
+
+  const save = document.createElement("button");
+  save.textContent = "Save to My Meals";
+  save.onclick = () => {
+    openMealModal(recipe.name);
+  };
+
+  actions.append(view,save);
+  body.append(actions,details);
+  card.append(photo,body);
+
+  return card;
+}
+
+/* =====================================
+   RENDER RECIPES
+===================================== */
+
+function renderAllRecipes(preloaded) {
+  const grid = $("allRecipes");
+  grid.replaceChildren();
+
+  const search = $("recipeSearch").value.toLowerCase();
+  const category = $("recipeCategory").value;
+  const time = Number($("recipeTime").value);
+
+  let collection = preloaded || recipes;
+
+  if(!preloaded) {
+    collection = recipes.filter(recipe =>
+      recipe.name.toLowerCase().includes(search) ||
+      recipe.description.toLowerCase().includes(search) ||
+      recipe.ingredients.some(x => x.includes(search))
+    )
+    .filter(recipe => category === "all" || recipe.category === category)
+    .filter(recipe => recipe.time <= time);
+  }
+
+  if(!collection.length) {
+    grid.appendChild(emptyState("No recipes found","Try another search or change your filters.","🍲"));
+    return;
+  }
+
+  collection.forEach(recipe => {
+    grid.appendChild(createRecipeCard(recipe,!!preloaded));
+  });
+}
+
+function renderFavorites() {
+  const grid = $("favoriteRecipes");
+  grid.replaceChildren();
+
+  const saved = recipes.filter(recipe => favorites.includes(recipe.name));
+
+  if(!saved.length) {
+    grid.appendChild(emptyState(
+      "Your cookbook is waiting!",
+      "Tap the heart on any recipe to save it here.",
+      "♥"
+    ));
+    return;
+  }
+
+  saved.forEach(recipe => grid.appendChild(createRecipeCard(recipe)));
+}
+
+function renderHomeRecipes() {
+  const grid = $("homeRecipes");
+  grid.replaceChildren();
+
+  recipes.slice(0,3).forEach(recipe => {
+    grid.appendChild(createRecipeCard(recipe));
+  });
+}
+
+/* =====================================
+   EMPTY STATES
+===================================== */
+
+function emptyState(title,description,emoji) {
+  const box = document.createElement("div");
+  box.className = "empty-state";
+
+  const icon = document.createElement("div");
+  icon.className = "big-icon";
+  icon.textContent = emoji;
+
+  const heading = document.createElement("h3");
+  heading.textContent = title;
+
+  const text = document.createElement("p");
+  text.textContent = description;
+
+  box.append(icon,heading,text);
+  return box;
+}
+
+/* =====================================
+   MY MEALS / FOOD JOURNAL
+===================================== */
+
+function openMealModal(recipeName = "") {
+  $("mealModal").classList.add("open");
+  $("mealName").value = recipeName;
+  $("mealDate").value = new Date().toLocaleDateString("en-CA");
+
+  const select = $("mealRecipe");
+  select.replaceChildren();
+
+  const own = document.createElement("option");
+  own.value = "";
+  own.textContent = "My own meal";
+  select.appendChild(own);
+
+  recipes.forEach(recipe => {
+    const option = document.createElement("option");
+    option.value = recipe.name;
+    option.textContent = recipe.name;
+    select.appendChild(option);
+  });
+
+  select.value = recipeName;
+}
+
+function closeMealModal() {
+  $("mealModal").classList.remove("open");
+}
+
+function saveMeal() {
+  const name = $("mealName").value.trim();
+  const date = $("mealDate").value;
+  const notes = $("mealNotes").value.trim();
+  const recipe = $("mealRecipe").value;
+
+  if(!name || !date) {
+    showToast("Enter a meal name and date first.");
+    return;
+  }
+
+  meals.unshift({
+    id:Date.now().toString(),
+    name,
+    date,
+    notes,
+    recipe
+  });
+
+  saveData("ptp_meals",meals);
+
+  $("mealName").value = "";
+  $("mealNotes").value = "";
+
+  closeMealModal();
+  renderMeals();
+  updateStats();
+
+  showToast("Your meal has been saved!");
+}
+
+function renderMeals() {
+  const log = $("mealLog");
+  log.replaceChildren();
+
+  $("mealTotal").textContent = meals.length + (meals.length === 1 ? " meal" : " meals");
+
+  if(!meals.length) {
+    log.appendChild(emptyState(
+      "Your cooking journey starts here",
+      "Save the meals you make to build your own food journal.",
+      "🍽️"
+    ));
+    return;
+  }
+
+  meals.forEach(meal => {
+    const entry = document.createElement("div");
+    entry.className = "meal-entry";
+
+    const info = document.createElement("div");
+
+    const heading = document.createElement("h3");
+    heading.textContent = "🍽️ " + meal.name;
+
+    const date = document.createElement("p");
+    date.textContent = "Made on " + new Date(meal.date + "T12:00:00").toLocaleDateString();
+
+    const notes = document.createElement("p");
+    notes.textContent = meal.notes || (meal.recipe ? "Recipe: " + meal.recipe : "Personal meal");
+
+    info.append(heading,date,notes);
+
+    const remove = document.createElement("button");
+    remove.className = "delete-btn";
+    remove.textContent = "Delete";
+    remove.onclick = () => {
+      if(confirm("Delete this saved meal?")) {
+        meals = meals.filter(x => x.id !== meal.id);
+        saveData("ptp_meals",meals);
+        renderMeals();
+        updateStats();
+        showToast("Meal deleted");
+      }
+    };
+
+    entry.append(info,remove);
+    log.appendChild(entry);
+  });
+}
+
+/* =====================================
+   HOME DASHBOARD
+===================================== */
+
+function updateStats() {
+  $("homeIngredients").textContent = ingredients.length;
+  $("homeFavorites").textContent = favorites.length;
+  $("homeMeals").textContent = meals.length;
+  $("favoriteCount").textContent = favorites.length;
+}
+
+/* =====================================
+   PHOTO UPLOAD
+===================================== */
+
+function setPhoto(file) {
+  if(!file) return;
+
+  if(!file.type.startsWith("image/")) {
+    showToast("Please choose an image.");
+    return;
+  }
+
+  if(file.size > 15 * 1024 * 1024) {
+    showToast("Choose an image smaller than 15 MB.");
+    return;
+  }
+
+  selectedPhoto = file;
+
+  if(photoURL) URL.revokeObjectURL(photoURL);
+  photoURL = URL.createObjectURL(file);
+
+  $("photoPreview").src = photoURL;
+  $("photoPreview").style.display = "block";
+  $("uploadPrompt").style.display = "none";
+  $("removePhoto").style.display = "inline-block";
+
+  $("photoStatus").textContent = "Photo uploaded successfully. Automatic AI identification is not connected.";
+}
+
+$("photoInput").addEventListener("change",e => {
+  setPhoto(e.target.files[0]);
+});
+
+$("removePhoto").addEventListener("click",() => {
+  selectedPhoto = null;
+
+  $("photoInput").value = "";
+  $("photoPreview").removeAttribute("src");
+  $("photoPreview").style.display = "none";
+  $("uploadPrompt").style.display = "block";
+  $("removePhoto").style.display = "none";
+
+  if(photoURL) URL.revokeObjectURL(photoURL);
+  photoURL = null;
+
+  $("photoStatus").textContent = "Photo preview is available. Automatic AI identification requires a connected AI service.";
+});
+
+$("scanBtn").addEventListener("click",() => {
+  if(!selectedPhoto) {
+    showToast("Upload a photo first.");
+    return;
+  }
+
+  $("kitchenNotice").textContent =
+    "Your photo is uploaded, but automatic ingredient identification requires a connected AI service. Your photo has not been analyzed. You can still add ingredients manually.";
+  $("kitchenNotice").style.display = "block";
+});
+
+const dropzone = $("dropzone");
+
+dropzone.addEventListener("dragover",e => {
+  e.preventDefault();
+  dropzone.style.borderColor = "#347454";
+});
+
+dropzone.addEventListener("dragleave",() => {
+  dropzone.style.borderColor = "";
+});
+
+dropzone.addEventListener("drop",e => {
+  e.preventDefault();
+  dropzone.style.borderColor = "";
+  setPhoto(e.dataTransfer.files[0]);
+});
+
+/* =====================================
+   STARTUP
+===================================== */
+
+function initialize() {
+  renderIngredients();
+  renderHomeRecipes();
+  renderFavorites();
+  renderMeals();
+  updateStats();
+}
+
+$("mealModal").addEventListener("click",e => {
+  if(e.target === $("mealModal")) closeMealModal();
+});
+
+initialize();
+
+</script>
+
+</body>
+</html>
